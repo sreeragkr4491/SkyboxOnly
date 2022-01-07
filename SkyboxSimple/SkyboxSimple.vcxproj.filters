@@ -40,5 +40,7 @@
     <None Include="skybox.vs">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="cube.vs" />
+    <None Include="cube.frag" />
   </ItemGroup>
 </Project>

@@ -151,6 +151,8 @@
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cube.frag" />
+    <None Include="cube.vs" />
     <None Include="skybox.frag" />
     <None Include="skybox.vs" />
   </ItemGroup>

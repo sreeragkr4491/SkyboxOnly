@@ -14,8 +14,8 @@
 
 using namespace std;
 
-void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
+void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void DoMovement();
 
 GLint wid = 2000; //*window variable
@@ -26,14 +26,17 @@ int screen_width, screen_height;
 
 //camera
 Camera camera(glm::vec3(0, 0, 3.0f));
+bool keys[1024];
+GLfloat lastX = 400;
+GLfloat lastY = 300;
+bool firstMouse = true;
+
 //timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
-GLfloat lastX = 400;
-GLfloat lastY = 300;
-bool keys[1024];
-bool firstMouse = true;
+
+
 
 void main()
 {
@@ -212,11 +215,18 @@ void main()
 
 	while (!glfwWindowShouldClose(window))
 	{
-		
-		glClearColor(0, 0, 0, 0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Set frame time
+		GLfloat currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		glfwPollEvents();
 		DoMovement();
+
+		glClearColor(0, 0, 0, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		
 		//skybox
 		glm::mat4 view1 = camera.GetViewMatrix();
 		glDepthFunc(GL_EQUAL);
@@ -246,9 +256,7 @@ void main()
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		
 		glfwSwapBuffers(window);
-		
 	}
 	glfwTerminate();
 }

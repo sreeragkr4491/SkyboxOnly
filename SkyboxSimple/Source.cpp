@@ -11,6 +11,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include"Texture.h"
 #include"Camera.h"
+#include"Model.h"
 
 using namespace std;
 
@@ -34,8 +35,6 @@ bool firstMouse = true;
 //timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
-
-
 
 
 void main()
@@ -70,7 +69,18 @@ void main()
 	glEnable(GL_DEPTH_TEST);
 	Shader shaders("skybox.vs", "skybox.frag");
 
+	Shader shader("res/model/modelLoading.vs", "res/model/modelLoading.frag");
+
+	Shader shader1("res/model/modelLoading1.vs", "res/model/modelLoading1.frag");
+
 	Shader shaders1("cube.vs", "cube.frag");
+	Shader shaders2("Cube1.vs", "Cube1.frag");
+
+	char tmp[] = "res/models2/Lamborghini_Aventador.obj";
+	Model ourModel(tmp);
+
+	char tmp1[] = "res/models1/nanosuit.obj";
+	Model ourModel1(tmp1);
 
 	GLfloat cube[] =
 	{
@@ -166,12 +176,29 @@ void main()
 	};
 
 
-	//cube
+	//cube1
 	GLuint cubeVAO, cubeVBO;
 	glGenVertexArrays(1, &cubeVAO);
 	glGenBuffers(1, &cubeVBO);
 	glBindVertexArray(cubeVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
+	//vertices
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	//normal
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	//cube2
+	GLuint cubeVAO2, cubeVBO2;
+	glGenVertexArrays(1, &cubeVAO2);
+	glGenBuffers(1, &cubeVBO2);
+	glBindVertexArray(cubeVAO2);
+	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO2);
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
 	//vertices
@@ -225,26 +252,11 @@ void main()
 
 		glClearColor(0, 0, 0, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		
-		//skybox
-		glm::mat4 view1 = camera.GetViewMatrix();
-		glDepthFunc(GL_EQUAL);
-		shaders.Use();
-		view1 = glm::mat4(glm::mat3(camera.GetViewMatrix()));
-		glUniformMatrix4fv(glGetUniformLocation(shaders.Program, "view"), 1, GL_FALSE, glm::value_ptr(view1));
-		glUniformMatrix4fv(glGetUniformLocation(shaders.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-		glBindVertexArray(skyboxVAO);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
-		glDepthFunc(GL_LEQUAL);
 
-		//cube
+		//cube1
+		shaders1.Use();
 		glm::mat4 view2 = camera.GetViewMatrix();
 		glm::mat4 model2;
-		shaders1.Use();
-		
 		GLint modellocation = glGetUniformLocation(shaders1.Program, "model");
 		GLint viewlocation = glGetUniformLocation(shaders1.Program, "view");
 		GLint projectionlocation = glGetUniformLocation(shaders1.Program, "projection");
@@ -255,7 +267,76 @@ void main()
 		glBindVertexArray(cubeVAO);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
+		
 
+		//cube2
+		glm::mat4 view3 = camera.GetViewMatrix();
+		glm::mat4 model3;
+		shaders2.Use();
+		GLint modellocation1 = glGetUniformLocation(shaders2.Program, "model");
+		GLint viewlocation1 = glGetUniformLocation(shaders2.Program, "view");
+		GLint projectionlocation1 = glGetUniformLocation(shaders2.Program, "projection");
+		glUniformMatrix4fv(viewlocation1, 1, GL_FALSE, glm::value_ptr(view3));
+		glUniformMatrix4fv(projectionlocation1, 1, GL_FALSE, glm::value_ptr(projection));
+		glBindVertexArray(cubeVAO2);
+		glUniformMatrix4fv(modellocation1, 1, GL_FALSE, glm::value_ptr(model3));
+		glBindVertexArray(cubeVAO2);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		
+
+		//skybox
+		glDepthFunc(GL_LEQUAL);//*****must remember after multiple objcets has drawn make sure depth fun should be lequal of our skybox that means we wantely set opengl make our skybox greater than all or all other drawing must be less than or equal
+		glm::mat4 view1 = camera.GetViewMatrix();
+		//glDepthMask(GL_FALSE);
+		shaders.Use();
+		view1 = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+		glUniformMatrix4fv(glGetUniformLocation(shaders.Program, "view"), 1, GL_FALSE, glm::value_ptr(view1));
+		glUniformMatrix4fv(glGetUniformLocation(shaders.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		glBindVertexArray(skyboxVAO);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		//glDepthMask(GL_TRUE);
+		glBindVertexArray(0);
+		glDepthFunc(GL_LESS);
+		
+		//model1
+		//glDepthFunc(GL_LEQUAL);
+		shader.Use();
+		glBindVertexArray(0);
+		// make sure use new view as view1 ***********************
+		glm::mat4 view4 = camera.GetViewMatrix();
+		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view4));
+		// make sure use new model as model1 ***********************
+		//6.4 Draw the loaded model and done
+		glm::mat4 model4;
+		//lambo value trans and scale
+		model4 = glm::translate(model4, glm::vec3(-2.0f, -2.0f, -50.0f)); // Translate it down a bit so it's at the center of the scene
+		model4 = glm::scale(model4, glm::vec3(0.02f, 0.02f, 0.02f));	// It's a bit too big for our scene, so scale it down
+		glBindVertexArray(0);
+		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model4));
+		ourModel.Draw(shader);
+		glBindVertexArray(0);
+
+		//model2
+		//glDepthFunc(GL_LEQUAL);
+		shader1.Use();
+		glBindVertexArray(0);
+		// make sure use new view as view1 ***********************
+		glm::mat4 view5 = camera.GetViewMatrix();
+		glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "view"), 1, GL_FALSE, glm::value_ptr(view5));
+		// make sure use new model as model1 ***********************
+		//6.4 Draw the loaded model and done
+		glm::mat4 model5;
+		//lambo value trans and scale
+		model4 = glm::translate(model4, glm::vec3(-2.0f, -2.0f, -50.0f)); // Translate it down a bit so it's at the center of the scene
+		model4 = glm::scale(model4, glm::vec3(-2.0f, -2.0f, -2.0f));	// It's a bit too big for our scene, so scale it down
+		glBindVertexArray(0);
+		glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "model"), 1, GL_FALSE, glm::value_ptr(model5));
+		ourModel1.Draw(shader1);
+		glBindVertexArray(0);
 		glfwSwapBuffers(window);
 	}
 	glfwTerminate();

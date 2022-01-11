@@ -32,6 +32,12 @@
     <ClInclude Include="Shader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="skybox.frag">
@@ -42,5 +48,9 @@
     </None>
     <None Include="cube.vs" />
     <None Include="cube.frag" />
+    <None Include="Cube1.vs" />
+    <None Include="Cube1.frag" />
+    <None Include="res\model\modelLoading1.frag" />
+    <None Include="res\model\modelLoading1.vs" />
   </ItemGroup>
 </Project>

@@ -88,13 +88,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\_OGL_LIB\SOIL_LIB\src;C:\_OGL_LIB\glm;C:\_OGL_LIB\glfw-3.0.4.bin.WIN32\include;C:\_OGL_LIB\glew-1.11.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\sreer\source\repos\SkyboxMultipleObjectWithModel\ExternalLibraries\assimp\include;C:\_OGL_LIB\SOIL_LIB\src;C:\_OGL_LIB\glm;C:\_OGL_LIB\glfw-3.0.4.bin.WIN32\include;C:\_OGL_LIB\glew-1.11.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\_OGL_LIB\SOIL_LIB\lib;C:\_OGL_LIB\glfw-3.0.4.bin.WIN32\lib-msvc120;C:\_OGL_LIB\glew-1.11.0\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;glew32.lib;legacy_stdio_definitions.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\sreer\source\repos\SkyboxMultipleObjectWithModel\ExternalLibraries\assimp\lib;C:\_OGL_LIB\SOIL_LIB\lib;C:\_OGL_LIB\glfw-3.0.4.bin.WIN32\lib-msvc120;C:\_OGL_LIB\glew-1.11.0\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;glew32.lib;legacy_stdio_definitions.lib;SOIL.lib;assimp-vc120-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -146,6 +146,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Shader1.h" />
     <ClInclude Include="Texture.h" />
@@ -153,6 +155,10 @@
   <ItemGroup>
     <None Include="cube.frag" />
     <None Include="cube.vs" />
+    <None Include="Cube1.frag" />
+    <None Include="Cube1.vs" />
+    <None Include="res\model\modelLoading1.frag" />
+    <None Include="res\model\modelLoading1.vs" />
     <None Include="skybox.frag" />
     <None Include="skybox.vs" />
   </ItemGroup>
